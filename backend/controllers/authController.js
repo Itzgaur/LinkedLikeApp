@@ -74,7 +74,23 @@ const login = asyncErrorHandler(async function (req, res, next) {
   createAndSendToken(res, 200, user);
 });
 
+const logout = asyncErrorHandler(async function (req, res, next) {
+  res.clearCookie('jwt-linkedin');
+  res.json({ message: 'Logged out successfully' });
+});
+
+const getCurrentUser = asyncErrorHandler(async function (req, res, next) {
+  const user = req.user;
+  if (!user) return next(new AppError(404, 'cannnot find the user'));
+
+  res.status(200).json({
+    user,
+  });
+});
+
 export default {
   signUp,
   login,
+  getCurrentUser,
+  logout,
 };

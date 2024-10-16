@@ -1,18 +1,32 @@
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import Demo from "./Demo";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "react-hot-toast";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import AppLayout from "./ui/AppLayout";
 
-const queryClient = new QueryClient();
+import { Routes, Route, Navigate } from "react-router-dom";
+import LoadingPage from "./pages/LoadingPage";
+import { useUser } from "./features/auth/useUser";
 
 function App() {
+  const { authUser, isLoading } = useUser();
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <Demo />
-    </QueryClientProvider>
+    <>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route index element={authUser ? <HomePage /> : <Navigate to={"/login"} />} />
+          <Route path="/home" element={authUser ? <HomePage /> : <Navigate to={"/login"} />} />
+          <Route path="/signup" element={!authUser ? <SignupPage /> : <Navigate to={"/home"} />} />
+          <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to={"/home"} />} />
+        </Route>
+      </Routes>
+      <Toaster />
+    </>
   );
 }
 

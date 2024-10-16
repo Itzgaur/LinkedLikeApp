@@ -6,12 +6,27 @@ import path from 'path';
 
 const createPost = asyncErrorHandler(async function (req, res, next) {
   const { content, image } = req.body;
+  let newPost;
 
-  const result = await cloudinary.uploader.upload(image);
+  if (image) {
+    const imageResult = await cloudinary.uploader.upload(image);
+    newPost = new Post({
+      author: req.user._id,
+      content,
+      image: imageResult.secure_url,
+    });
+  } else {
+    newPost = new Post({
+      author: req.user._id,
+      content,
+    });
+  }
 
-  console.log(result);
-  res.json({
-    message: 'post is created',
+  await newPost.save();
+
+  res.status(201).json({
+    Success: true,
+    data: { newPost },
   });
 });
 
