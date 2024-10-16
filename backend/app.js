@@ -6,6 +6,7 @@ import cors from 'cors';
 import authRouter from './routes/auth.js';
 import userRouter from './routes/userRoutes.js';
 import postsRouter from './routes/postsRoutes.js';
+import notificationRouter from './routes/notificationRoutes.js';
 import globalErroHandler from './controllers/errorController.js';
 
 export const app = express();
@@ -26,4 +27,5 @@ app.use(morgan('dev'));
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postsRouter);
+app.use('/api/v1/notification', notificationRouter);
 app.use(globalErroHandler);

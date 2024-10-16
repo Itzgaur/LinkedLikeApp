@@ -30,8 +30,8 @@ const LoginForm = () => {
         required
       />
 
-      <button type="submit" className="btn btn-primary w-full">
-        {false ? "Loading.." : "Login"}
+      <button type="submit" disabled={isPending} className="btn btn-primary w-full">
+        {isPending ? "Loading.." : "Login"}
       </button>
     </form>
   );

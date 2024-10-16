@@ -10,9 +10,13 @@ export async function login(data) {
   return res.data;
 }
 
-export async function fetchCurrentUser(data) {
-  const res = await httpClient.get("/auth/me");
-  return res.data;
+export async function fetchCurrentUser() {
+  try {
+    const res = await httpClient.get("/auth/me");
+    return res.data.user;
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function logout() {

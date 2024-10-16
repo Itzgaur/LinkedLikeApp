@@ -8,11 +8,7 @@ export function useLogin() {
   const { mutate: login, isPending } = useMutation({
     mutationFn: loginApi,
     onSuccess: (res) => {
-      console.log(res);
-      queryClient.invalidateQueries({
-        queryKey: ["authUser"],
-      });
-
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
       // queryClient.setQueryData(["authUser"], res.user);
       toast.success("Login successful!");
     },
