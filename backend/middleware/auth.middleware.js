@@ -7,11 +7,12 @@ const protect = asyncErrorHandler(async function (req, res, next) {
   console.log(`inside protect middlware`);
 
   const token = req.cookies['jwt-linkedin'];
+
   if (!token) {
     return next(new AppError(401, `you are not logged In. Please login first`));
   }
+
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  //   console.log(decoded);
 
   if (!decoded) {
     return next(new AppError(401, 'Token expired!'));

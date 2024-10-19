@@ -10,7 +10,7 @@ export default function NavBar() {
 
   return (
     // outer container
-    <nav className="bg-secondary shadow-md">
+    <nav className="bg-secondary shadow-md sticky top-0 z-10">
       {/* max width and center alignment */}
       <div className="max-w-7xl  mx-auto px-4  ">
         {/* navigation bar container */}

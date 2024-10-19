@@ -5,6 +5,7 @@ const getUserNotifications = asyncErrorHandler(async function (req, res, next) {
   const notification = await Notification.find({
     recipient: req.user._id,
   })
+    .sort({ createdAt: -1 })
     .populate('relatedUser', 'name profilePicture username')
     .populate('relatedPost', 'content image');
 
