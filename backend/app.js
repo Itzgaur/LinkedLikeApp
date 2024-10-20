@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'production') {
   );
 }
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(morgan('dev'));
 
@@ -28,4 +28,8 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postsRouter);
 app.use('/api/v1/notification', notificationRouter);
+
+app.use('*', function (req, res, next) {
+  res.send(`this is wrong path`);
+});
 app.use(globalErroHandler);
