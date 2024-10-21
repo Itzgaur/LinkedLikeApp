@@ -13,7 +13,8 @@ export function useLogin() {
       toast.success("Login successful!");
     },
     onError: (err) => {
-      console.log(err);
+      // console.log(err);
+      toast.error(err.response.data.message);
     },
   });
   return { login, isPending };

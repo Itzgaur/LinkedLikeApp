@@ -15,14 +15,11 @@ function PostCreation() {
   const { createPost, isPending } = useCreatePost();
 
   async function handlePost() {
-    console.log("working...");
-
     const postData = { content };
     if (image) {
       postData.image = await converImagetoBase64(image);
     }
 
-    console.log(postData);
     handleReset();
     createPost(postData);
   }
@@ -45,7 +42,7 @@ function PostCreation() {
   }
 
   return (
-    <div className="bg-secondary rounded-lg shadow p-4">
+    <div className="bg-secondary rounded-lg shadow p-4 mb-4">
       <div className="flex space-x-4">
         <img src="avatar.png" alt="user" className="size-12 rounded-full" />
         <textarea
@@ -75,15 +72,15 @@ function PostCreation() {
         {/* todo write button content logic and fix the color issue */}
         <div className="flex space-x-3">
           <button
-            // disabled={!content && !image}
+            disabled={!content && !image}
             onClick={handlePost}
             className="bg-primary hover:cursor-pointer hover:bg-[#095cb0] text-white px-4 py-2 rounded-lg  transition-colors duration-200s"
           >
             Share
           </button>
-          {imagePreview && (
+          {(image || content) && (
             <button
-              disabled={!image}
+              disabled={!image && !content}
               className="bg-error hover:cursor-pointer text-white px-4 py-2 rounded-lg  transition-colors duration-200s"
               onClick={handleReset}
             >

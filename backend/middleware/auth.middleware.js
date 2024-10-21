@@ -25,6 +25,7 @@ const protect = asyncErrorHandler(async function (req, res, next) {
   }
 
   req.user = user;
+  console.log(`moving to controller now`);
   next();
 });
 
