@@ -2,7 +2,7 @@ import { Loader, Users } from "lucide-react";
 import PostCreation from "../features/posts/PostCreation";
 import { usePosts } from "../features/posts/usePosts";
 import Sidebar from "../ui/Sidebar";
-import Post from "../features/posts/post";
+import Post from "../features/posts/Post";
 
 function HomePage() {
   const { posts, isLoading } = usePosts();

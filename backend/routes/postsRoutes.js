@@ -11,5 +11,10 @@ router.delete(
   authMiddleware.protect,
   postController.deletePost
 );
-
+router.post('/:id/like', authMiddleware.protect, postController.likePost);
+router.post(
+  '/:id/comment',
+  authMiddleware.protect,
+  postController.createComment
+);
 export default router;

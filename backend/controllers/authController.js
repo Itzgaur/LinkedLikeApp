@@ -17,7 +17,7 @@ const createAndSendToken = function (res, statusCode, user) {
 
   res.cookie('jwt-linkedin', token, {
     httpOnly: true, // prevent XSS attack
-    maxAge: 60 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000, //todo: change the timing
     sameSite: 'strict', // prevent CSRF attacks,
     secure: process.env.NODE_ENV === 'production', // prevents man-in-the-middle attacks
   });

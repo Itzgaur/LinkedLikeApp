@@ -1,23 +1,61 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader, MessageCircle, Share, ThumbsUp, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { deletePostById } from "../../services/apiPost";
 import { useDeletePost } from "./useDeletePost";
 import PostAction from "./PostAction";
+import { useLikePost } from "./useLikePost";
+import { useState } from "react";
+import { formatDistanceToNow } from "date-fns";
+import { useCreateComment } from "./useCreateComment";
 
 function Post({ post }) {
-  const querClient = useQueryClient();
+  const queryClient = useQueryClient();
+  const authUser = queryClient.getQueryData(["authUser"]);
 
-  const authUser = querClient.getQueryData(["authUser"]);
-
-  const { delePost, isPending } = useDeletePost();
+  const { delePost, deletePending } = useDeletePost();
+  const { likePost, isLiking } = useLikePost();
   const isOwner = authUser?._id === post?.author?._id;
   const isLiked = post?.likes?.includes(authUser?._id);
+  const [liked, setLiked] = useState({ isLiked, count: post.likes.length ?? 0 });
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState(post?.comment || []);
+  const [newComment, setNewComment] = useState("");
+  const { createComment, isCreatingComment } = useCreateComment();
 
   function handleDeletePost() {
-    console.log(post._id);
     delePost(post._id);
   }
+
+  function handleLikePost() {
+    if (isLiking) return;
+    setLiked((prev) => ({
+      isLiked: !prev.isLiked,
+      count: prev.isLiked ? prev.count - 1 : prev.count + 1,
+    }));
+    likePost(post._id);
+  }
+
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    if (newComment.trim()) {
+      // Add the comment to the local state (optimistic UI)
+      setComments([
+        ...comments, // Spread the existing comments
+        {
+          content: newComment, // The content of the new comment
+          user: {
+            _id: authUser._id, // Authenticated user ID
+            name: authUser.name, // Authenticated user name
+            profilePicture: authUser.profilePicture, // User's profile picture
+          },
+          createdAt: new Date(), // Timestamp of when the comment was created
+        },
+      ]);
+      await createComment(post._id, newComment);
+      // Clear the input field after the comment is added
+      setNewComment("");
+    }
+  };
 
   return (
     <div className="bg-secondary shadow rounded-lg mb-4">
@@ -47,7 +85,7 @@ function Post({ post }) {
             <div>
               <Link>
                 <button className="text-red-500 hover:text-red-700" onClick={handleDeletePost}>
-                  {isPending ? <Loader size={18} className="loading-spinner" /> : <Trash2 size={18} />}
+                  {deletePending ? <Loader size={18} className="loading-spinner" /> : <Trash2 size={18} />}
                 </button>
               </Link>
             </div>
@@ -56,17 +94,18 @@ function Post({ post }) {
         <p className="mb-2">{post?.content}</p>
         {post.image && <img src={post.image} alt="Post content" className="rounded-lg w-full mb-4" />}
 
+        {/* post actions */}
         <div className="flex justify-around items-center">
           <PostAction
-            icon={<ThumbsUp size={18} className={!isLiked ? "text-blue-500" : "fill-blue-500"} />}
-            text={`Like(2)`}
-            onClick={() => console.log(`working`)}
+            icon={<ThumbsUp size={18} className={!liked.isLiked ? "text-blue-500" : "fill-blue-500"} />}
+            text={`Like (${liked.count})`}
+            onClick={handleLikePost}
           />
 
           <PostAction
             icon={<MessageCircle size={18} className="text-blue-500" />}
-            text={"comments(1)"}
-            onClick={() => console.log(`comments working`)}
+            text={`comments ${comments.length}`}
+            onClick={() => setShowComments(!showComments)}
           />
 
           <PostAction
@@ -75,6 +114,45 @@ function Post({ post }) {
           />
         </div>
       </div>
+
+      {showComments && (
+        <div className="pb-4 px-4">
+          <div className="mb-4 max-h-60 overflow-y-auto">
+            {comments.map((comment, index) => (
+              <div className="mb-2 bg-base-100 p-2 rounded flex items-center" key={comment?._id || index}>
+                <img
+                  src={comment?.user?.profilePicture || "/avatar.png"}
+                  alt={comment.user.name || "user"}
+                  className="mr-2 w-8 h-8 rounded-full bg-red-500"
+                />
+                <div className=" flex-grow">
+                  <div className="flex items-center ">
+                    <span className="font-semibold mr-2">{comment.user.name}</span>
+                    <span className="text-xs text-info'">{formatDistanceToNow(new Date(comment.createdAt))}</span>
+                  </div>
+                  <p>{comment.content}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <form className="flex items-center" onSubmit={handleAddComment}>
+            <input
+              type="text"
+              placeholder="add a comment..."
+              className="flex-grow mr-2 p-2 focus:outline-none focus:ring-2 focus:ring-primary rounded-full bg-base-10"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-primary text-white p-2 rounded-full hover:bg-[#095cb0] transition duration-300"
+            >
+              Comment
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

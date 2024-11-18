@@ -1,3 +1,4 @@
+import Notification from '../models/notificationModel.js';
 import Post from '../models/postModel.js';
 import AppError from '../utils/appError.js';
 import asyncErrorHandler from '../utils/asyncErrorHandler.js';
@@ -72,8 +73,69 @@ const deletePost = asyncErrorHandler(async function (req, res, next) {
   });
 });
 
+const likePost = asyncErrorHandler(async function (req, res, next) {
+  const postId = req.params.id;
+  const userId = req.user._id;
+
+  const post = await Post.findById(postId);
+  //if user is there already, unlike the post
+  if (post?.likes?.includes(userId)) {
+    post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
+  } else {
+    post.likes.push(userId);
+
+    const newNotification = new Notification({
+      recipient: post.author,
+      relatedPost: postId,
+      relatedUser: userId,
+      type: 'like',
+    });
+    await newNotification.save();
+  }
+
+  await post.save();
+  res.status(200).json({
+    success: true,
+    data: { post },
+  });
+});
+
+const createComment = asyncErrorHandler(async function (req, res, next) {
+  const postId = req.params.id;
+  const userId = req.user._id;
+  const { content } = req.body;
+
+  const post = await Post.findById(postId)
+    .select('-image')
+    .populate('author', 'name email username headline profilePicture');
+
+  if (!post) {
+    return next(new AppError(404, 'Post not found'));
+  }
+
+  post.comment.push({ content, user: userId });
+  await post.save();
+
+  if (post.author._id.toString() !== userId.toString()) {
+    const newNotification = new Notification({
+      recipient: post.author,
+      relatedPost: postId,
+      relatedUser: userId,
+      type: 'comment',
+    });
+    await newNotification.save();
+  }
+
+  res.status(201).json({
+    success: true,
+    data: { post },
+  });
+});
+
 export default {
   getFeedPosts,
   createPost,
   deletePost,
+  likePost,
+  createComment,
 };
