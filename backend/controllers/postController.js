@@ -77,7 +77,8 @@ const likePost = asyncErrorHandler(async function (req, res, next) {
   const postId = req.params.id;
   const userId = req.user._id;
 
-  const post = await Post.findById(postId);
+  const post = await Post.findById(postId).select('-image');
+
   //if user is there already, unlike the post
   if (post?.likes?.includes(userId)) {
     post.likes = post.likes.filter((id) => id.toString() !== userId.toString());

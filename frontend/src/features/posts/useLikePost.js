@@ -11,7 +11,6 @@ export function useLikePost() {
     onSuccess: (res) => {
       console.log(res);
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      // toast.success(`Post liked successfully`);
     },
     onError: (err) => {
       console.log(err.message);

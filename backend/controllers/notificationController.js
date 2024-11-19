@@ -6,8 +6,8 @@ const getUserNotifications = asyncErrorHandler(async function (req, res, next) {
     recipient: req.user._id,
   })
     .sort({ createdAt: -1 })
-    .populate('relatedUser', 'name profilePicture username')
-    .populate('relatedPost', 'content image');
+    .populate('relatedUser', 'name  username')
+    .populate('relatedPost', 'content ');
 
   res.status(200).json({
     status: 'success',

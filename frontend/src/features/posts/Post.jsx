@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader, MessageCircle, Share, ThumbsUp, Trash2 } from "lucide-react";
+import { Loader, MessageCircle, Send, Share, ThumbsUp, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDeletePost } from "./useDeletePost";
 import PostAction from "./PostAction";
@@ -26,14 +26,14 @@ function Post({ post }) {
     delePost(post._id);
   }
 
-  function handleLikePost() {
+  const handleLikePost = async () => {
     if (isLiking) return;
     setLiked((prev) => ({
       isLiked: !prev.isLiked,
       count: prev.isLiked ? prev.count - 1 : prev.count + 1,
     }));
     likePost(post._id);
-  }
+  };
 
   const handleAddComment = async (e) => {
     e.preventDefault();
@@ -77,7 +77,7 @@ function Post({ post }) {
                 <h3 className="font-semibold"> {post?.author?.name || "Demo User"}</h3>
               </Link>
               <p className="text-info text-xs">{post?.author?.headline || "LinkedIn User"}</p>
-              <p className="text-xs text-info">Time</p>
+              <p className="text-xs text-info">{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</p>
             </div>
           </div>
           {/* delete button */}
@@ -104,7 +104,7 @@ function Post({ post }) {
 
           <PostAction
             icon={<MessageCircle size={18} className="text-blue-500" />}
-            text={`comments ${comments.length}`}
+            text={`comments (${comments.length})`}
             onClick={() => setShowComments(!showComments)}
           />
 
@@ -128,7 +128,9 @@ function Post({ post }) {
                 <div className=" flex-grow">
                   <div className="flex items-center ">
                     <span className="font-semibold mr-2">{comment.user.name}</span>
-                    <span className="text-xs text-info'">{formatDistanceToNow(new Date(comment.createdAt))}</span>
+                    <span className="text-xs text-info'">
+                      {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                    </span>
                   </div>
                   <p>{comment.content}</p>
                 </div>
@@ -148,7 +150,7 @@ function Post({ post }) {
               type="submit"
               className="bg-primary text-white p-2 rounded-full hover:bg-[#095cb0] transition duration-300"
             >
-              Comment
+              {isCreatingComment ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
             </button>
           </form>
         </div>
