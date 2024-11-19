@@ -8,7 +8,7 @@ import useSuggestedUser from "../features/user/useSuggestedUser";
 
 function HomePage() {
   const { posts, isLoading } = usePosts();
-  const { isFetchingSuggestedUser, suggestConnections } = useSuggestedUser();
+  const { suggestConnections } = useSuggestedUser();
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">

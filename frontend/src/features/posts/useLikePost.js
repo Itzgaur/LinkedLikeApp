@@ -9,11 +9,10 @@ export function useLikePost() {
     mutationFn: likePostApi,
 
     onSuccess: (res) => {
-      console.log(res);
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (err) => {
-      console.log(err.message);
       toast.error(`Error liking post: "${err.message}"`);
     },
   });

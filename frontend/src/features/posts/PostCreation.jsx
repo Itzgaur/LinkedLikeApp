@@ -12,7 +12,7 @@ function PostCreation() {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  const { createPost, isPending } = useCreatePost();
+  const { createPost, isCreatingPost } = useCreatePost();
 
   async function handlePost() {
     const postData = { content };
@@ -55,7 +55,7 @@ function PostCreation() {
       </div>
 
       {/* show the image */}
-      {imagePreview && !isPending && (
+      {imagePreview && !isCreatingPost && (
         <div className="mt-4">
           <img src={imagePreview} alt="Selected" className="w-full h-auto rounded-lg" />
         </div>

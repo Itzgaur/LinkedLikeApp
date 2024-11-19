@@ -16,7 +16,7 @@ function Post({ post }) {
   const { likePost, isLiking } = useLikePost();
   const isOwner = authUser?._id === post?.author?._id;
   const isLiked = post?.likes?.includes(authUser?._id);
-  const [liked, setLiked] = useState({ isLiked, count: post.likes.length ?? 0 });
+  const [liked, setLiked] = useState({ isLiked, count: post?.likes?.length ?? 0 });
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState(post?.comment || []);
   const [newComment, setNewComment] = useState("");

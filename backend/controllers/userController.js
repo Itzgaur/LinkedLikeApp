@@ -8,7 +8,6 @@ const getSuggestedConnections = asyncErrorHandler(async function (
   next
 ) {
   const currentUser = await User.findById(req.user._id);
-  console.log(currentUser);
 
   const suggestion = await User.find({
     _id: {
@@ -28,7 +27,6 @@ const getSuggestedConnections = asyncErrorHandler(async function (
 });
 
 const getProfile = asyncErrorHandler(async function (req, res, next) {
-  //   console.log(req);
   const user = await User.findOne({ username: req.params.username }).select(
     '-password'
   );

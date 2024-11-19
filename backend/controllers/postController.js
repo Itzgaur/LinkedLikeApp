@@ -2,6 +2,7 @@ import Notification from '../models/notificationModel.js';
 import Post from '../models/postModel.js';
 import AppError from '../utils/appError.js';
 import asyncErrorHandler from '../utils/asyncErrorHandler.js';
+import cloudinary from '../utils/cloudinary.js';
 
 const createPost = asyncErrorHandler(async function (req, res, next) {
   const { content, image } = req.body;
@@ -9,11 +10,11 @@ const createPost = asyncErrorHandler(async function (req, res, next) {
   console.log(`inside creating post`);
 
   if (image) {
-    // const imageResult = await cloudinary.uploader.upload(image);
+    const imageResult = await cloudinary.uploader.upload(image);
     newPost = new Post({
       author: req.user._id,
       content,
-      image,
+      image: imageResult.secure_url,
     });
   } else {
     newPost = new Post({
@@ -66,6 +67,7 @@ const deletePost = asyncErrorHandler(async function (req, res, next) {
   }
 
   const deletedPost = await Post.findByIdAndDelete(postId);
+  await Notification.deleteMany({ relatedPost: postId });
 
   res.status(200).json({
     success: true,
@@ -81,6 +83,11 @@ const likePost = asyncErrorHandler(async function (req, res, next) {
 
   //if user is there already, unlike the post
   if (post?.likes?.includes(userId)) {
+    await Notification.findOneAndDelete({
+      relatedUser: userId,
+      relatedPost: postId,
+      type: 'like',
+    });
     post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
   } else {
     post.likes.push(userId);

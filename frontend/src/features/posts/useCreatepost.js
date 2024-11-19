@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export function useCreatePost() {
   const queryClient = useQueryClient();
-  const { mutate: createPost, isPending } = useMutation({
+  const { mutate: createPost, isPending: isCreatingPost } = useMutation({
     mutationFn: createPostApi,
     onSuccess: (res) => {
       toast.success("Post created successfully");
@@ -15,5 +15,5 @@ export function useCreatePost() {
     },
   });
 
-  return { createPost, isPending };
+  return { createPost, isCreatingPost };
 }

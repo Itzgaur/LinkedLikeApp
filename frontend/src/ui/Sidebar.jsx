@@ -16,7 +16,7 @@ function Sidebar({ user }) {
         <Link to={"/profile"}>
           <img src="avatar.png" alt="profile-picture" className="h-20 w-20 rounded-full mx-auto mt-[-40px]" />
 
-          <h2 className="text-xl mt-2 font-semibold">{user?.name || "demo user"}</h2>
+          <h2 className="text-xl mt-2 font-semibold">{user?.name || "Demo user"}</h2>
         </Link>
         <p className="text-info">{user?.headline || "LinkedIn user"}</p>
         <p className="text-info text-xs">{user?.connections.length || "0"} connections</p>

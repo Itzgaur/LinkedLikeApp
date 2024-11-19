@@ -2,10 +2,12 @@ import { Link } from "react-router-dom";
 import { BellIcon, Home, LogOut, User, Users } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLogout } from "../features/auth/useLogout";
+import useNotifications from "../features/user/useNotification";
 
 export default function NavBar() {
   const queryClient = useQueryClient();
   const authUser = queryClient.getQueryData(["authUser"]);
+  const { userNotification } = useNotifications();
   const { logout } = useLogout();
 
   return (
@@ -42,15 +44,18 @@ export default function NavBar() {
                     2
                   </span>
                 </Link>
+
                 <Link to={"/home"} className="text-neutral flex flex-col items-center text-ne relative">
                   <BellIcon size={20} />
                   <span className="text-xs hidden md:block">Notification</span>
-                  <span
-                    className="absolute -top-1  -right-1 bg-blue-500 rounded-full
+                  {userNotification?.length > 0 && (
+                    <span
+                      className="absolute -top-1  -right-1 bg-blue-500 rounded-full
                  text-white text-xs size-3 md:size-4 flex items-center justify-center md:right-4 "
-                  >
-                    2
-                  </span>
+                    >
+                      {userNotification?.length}
+                    </span>
+                  )}
                 </Link>
                 <Link to={"/home"} className="text-neutral flex flex-col items-center text-ne">
                   <User size={20} />
