@@ -1,4 +1,4 @@
-import { Image } from "lucide-react";
+import { Image, Loader } from "lucide-react";
 import { useState } from "react";
 
 import { converImagetoBase64 } from "../../utils/converImagetoBase64";
