@@ -54,6 +54,12 @@ function PostCreation() {
         />
       </div>
 
+      {isCreatingPost && (
+        <div className="fixed z-10 bg-gray-200 opacity-75 top-0 right-0 left-0 bottom-0 flex justify-center">
+          <Loader className="loading-spinner mt-10" size={25} />
+        </div>
+      )}
+
       {/* show the image */}
       {imagePreview && !isCreatingPost && (
         <div className="mt-4">

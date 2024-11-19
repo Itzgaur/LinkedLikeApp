@@ -10,7 +10,9 @@ const createPost = asyncErrorHandler(async function (req, res, next) {
   console.log(`inside creating post`);
 
   if (image) {
-    const imageResult = await cloudinary.uploader.upload(image);
+    const imageResult = await cloudinary.uploader.upload(image, {
+      folder: 'linkedIn',
+    });
     newPost = new Post({
       author: req.user._id,
       content,
