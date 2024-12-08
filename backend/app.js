@@ -6,6 +6,7 @@ import cors from 'cors';
 import authRouter from './routes/auth.js';
 import userRouter from './routes/userRoutes.js';
 import postsRouter from './routes/postsRoutes.js';
+import connectionsRouter from './routes/connectionRoutes.js';
 import notificationRouter from './routes/notificationRoutes.js';
 import globalErroHandler from './controllers/errorController.js';
 
@@ -28,6 +29,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postsRouter);
 app.use('/api/v1/notification', notificationRouter);
+app.use('/api/v1/connections', connectionsRouter);
 
 app.use('*', function (req, res, next) {
   res.send(`this is wrong path`);
