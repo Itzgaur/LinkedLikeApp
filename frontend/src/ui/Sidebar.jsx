@@ -35,7 +35,7 @@ function Sidebar({ user }) {
             </li>
             <li>
               <Link
-                to={"/home"}
+                to={"/network"}
                 className="flex items-center rounded-md py-2 px-4 hover:bg-primary hover:text-white transition-colors"
               >
                 <UserPlus size={20} className="mr-2" /> <span>My Network</span>

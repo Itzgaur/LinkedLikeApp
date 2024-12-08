@@ -1,10 +1,7 @@
 function NetworkPage() {
-  const [show, setShow] = useState(false);
-
   return (
     <div>
-      <button>Show</button>
-      {show && <p>This is modal</p>}
+      <h1>Network page</h1>
     </div>
   );
 }
